@@ -1,0 +1,91 @@
+## Problem Statement
+
+A rat is placed at the top-left corner of a maze and needs to reach the bottom-right corner.
+
+The maze consists of open cells and blocked cells. The rat can move in **four directions**:
+
+* Left
+* Right
+* Up
+* Down
+
+The rat cannot move outside the boundaries of the maze or through blocked cells.
+
+You need to find a path from the starting position to the destination and print the path using a matrix of `0`s and `1`s.
+
+* `1` represents a cell that is part of the path.
+* `0` represents a cell that is not part of the path.
+
+If no path exists, print:
+
+```text
+No Path Found
+```
+
+### Input
+
+The first line contains two integers:
+
+```text
+n m
+```
+
+where:
+
+* `n` = number of rows in the maze
+* `m` = number of columns in the maze
+
+The next `n` lines contain the maze.
+
+Each cell is represented by:
+
+* `O` — an open cell through which the rat can move.
+* `X` — a blocked cell.
+
+The rat starts at:
+
+```text
+(0, 0)
+```
+
+and the destination is:
+
+```text
+(n - 1, m - 1)
+```
+
+### Output
+
+If a path exists, print an `n × m` matrix where:
+
+* `1` represents the cells through which the rat travels.
+* `0` represents all other cells.
+
+If there is no possible path, print:
+
+```text
+No Path Found
+```
+
+### Example
+
+**Input:**
+
+```text
+4 4
+OOXX
+OXOO
+OXOX
+OOOX
+```
+
+**Output:**
+
+```text
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 1 1 1
+```
+
+ The important constraint for the solution is that a unique path exists when a valid path is present.
