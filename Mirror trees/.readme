@@ -1,0 +1,165 @@
+# 101. Symmetric Tree
+
+[LeetCode - Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+## My Approach
+
+At first, I thought about using level order traversal with a queue, since symmetry seems related to comparing nodes level by level.
+
+But while thinking about how to actually compare the nodes, the queue approach started getting messy.
+
+Then I noticed something simpler:
+
+The root divides the tree into two separate subtrees.
+
+So instead of asking:
+
+"Is this whole tree symmetric?"
+
+I can ask:
+
+"Are the left and right subtrees mirrors of each other?"
+
+That makes the problem much more natural for recursion.
+
+---
+
+## The Mirror Observation
+
+Suppose we have two subtrees.
+
+For them to be mirrors:
+
+- Left side of the first tree must match the right side of the second tree.
+- Right side of the first tree must match the left side of the second tree.
+
+So:
+
+    root2.left  <->  root3.right
+    root2.right <->  root3.left
+
+Every recursive call therefore compares opposite branches.
+
+---
+
+## The Three Cases
+
+When comparing two nodes, there are three important cases.
+
+### 1. Both are null
+
+    root2 = null
+    root3 = null
+
+Both sides ended at the same time.
+
+Therefore, this part is symmetric.
+
+    return true;
+
+### 2. Only one is null
+
+    root2 = null
+    root3 = node
+
+or the opposite.
+
+One tree has a node where the other does not.
+
+Therefore, their structures are different.
+
+    return false;
+
+### 3. Values are different
+
+If both nodes exist but:
+
+    root2.data != root3.data
+
+then they cannot be mirrors.
+
+    return false;
+
+---
+
+## Recursive Step
+
+If both nodes exist and their values match, I recursively compare the opposite branches.
+
+    boolean b = mirror(root2.left, root3.right);
+    boolean c = mirror(root2.right, root3.left);
+
+Both comparisons must be true.
+
+    return b && c;
+
+The important part is that recursion is not doing anything mysterious.
+
+I am simply asking the same mirror question on smaller pairs of subtrees.
+
+---
+
+## Main Insight
+
+The interesting part of this problem was not learning a new traversal.
+
+It was changing the way I looked at the tree.
+
+Initially:
+
+    Symmetry
+        |
+        v
+    Level Order
+        |
+        v
+      Queue
+
+But that started getting complicated.
+
+Then I noticed:
+
+    Symmetry
+        |
+        v
+    Two Subtrees
+        |
+        v
+    Compare Them as Mirrors
+        |
+        v
+    Recursively Compare Opposite Branches
+
+Once I saw the tree as two halves, the recursive solution became almost natural.
+
+---
+
+ Complexity
+
+Every node is visited once.
+
+Time
+
+O(n)
+
+Space
+
+O(h) due to the recursion stack, where h is the height of the tree.
+
+Balanced tree → O(log n)
+Skewed tree → O(n)
+ What I Learned
+
+The main takeaway for me:
+
+A recursive problem often becomes simple once I identify exactly what smaller version of the same question I need to ask.
+
+Here, the smaller question was not:
+
+"Is this subtree symmetric?"
+
+It was:
+
+"Are these two subtrees mirrors of each other?"
+
+That small change in perspective turned what initially looked like a queue/traversal problem into a straightforward recursive comparison.
