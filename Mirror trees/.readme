@@ -1,3 +1,28 @@
+# Tree Comparison - Symmetric Tree, Same Tree and Same Structure
+
+## Main Idea
+
+While working with tree comparison problems, I noticed that several problems use almost the same recursive pattern.
+
+The main difference is not the recursion itself, but:
+
+- What should be compared?
+- Should the branches be compared directly or as mirrors?
+- Do the values matter?
+
+This led to three closely related ideas:
+
+    Same Tree
+        -> left with left, right with right, values matter
+
+    Same Structure
+        -> left with left, right with right, values do not matter
+
+    Symmetric Tree
+        -> left with right, right with left, values matter
+
+---
+
 # 101. Symmetric Tree
 
 [LeetCode - Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
@@ -26,17 +51,15 @@ That makes the problem much more natural for recursion.
 
 ## The Mirror Observation
 
-Suppose we have two subtrees.
+For two subtrees to be mirrors:
 
-For them to be mirrors:
-
-- Left side of the first tree must match the right side of the second tree.
-- Right side of the first tree must match the left side of the second tree.
+- The left side of the first tree must match the right side of the second tree.
+- The right side of the first tree must match the left side of the second tree.
 
 So:
 
-    root2.left  <->  root3.right
-    root2.right <->  root3.left
+    root2.left  <-> root3.right
+    root2.right <-> root3.left
 
 Every recursive call therefore compares opposite branches.
 
@@ -55,8 +78,6 @@ Both sides ended at the same time.
 
 Therefore, this part is symmetric.
 
-    return true;
-
 ### 2. Only one is null
 
     root2 = null
@@ -68,34 +89,11 @@ One tree has a node where the other does not.
 
 Therefore, their structures are different.
 
-    return false;
-
 ### 3. Values are different
 
-If both nodes exist but:
+If both nodes exist but their values are different, they cannot be mirrors.
 
-    root2.data != root3.data
-
-then they cannot be mirrors.
-
-    return false;
-
----
-
-## Recursive Step
-
-If both nodes exist and their values match, I recursively compare the opposite branches.
-
-    boolean b = mirror(root2.left, root3.right);
-    boolean c = mirror(root2.right, root3.left);
-
-Both comparisons must be true.
-
-    return b && c;
-
-The important part is that recursion is not doing anything mysterious.
-
-I am simply asking the same mirror question on smaller pairs of subtrees.
+If none of these conditions fail, I recursively compare the opposite branches.
 
 ---
 
@@ -134,27 +132,150 @@ Once I saw the tree as two halves, the recursive solution became almost natural.
 
 ---
 
- Complexity
+# Same Tree
 
-Every node is visited once.
+After understanding the mirror comparison, comparing two trees directly becomes even simpler.
 
-Time
+For two trees to be completely the same:
 
-O(n)
+- Both nodes must be null at the same time.
+- One cannot be null while the other exists.
+- Their values must be equal.
+- Their left subtrees must be the same.
+- Their right subtrees must be the same.
 
-Space
+The important difference from Symmetric Tree is the direction of comparison.
 
-O(h) due to the recursion stack, where h is the height of the tree.
+Instead of:
 
-Balanced tree → O(log n)
-Skewed tree → O(n)
- What I Learned
+    left  <-> right
+    right <-> left
 
-The main takeaway for me:
+we simply compare:
 
-A recursive problem often becomes simple once I identify exactly what smaller version of the same question I need to ask.
+    left  <-> left
+    right <-> right
 
-Here, the smaller question was not:
+So the recursion asks whether corresponding positions in both trees are the same.
+
+---
+
+# Same Structure
+
+Now we can remove one condition.
+
+Suppose we don't care about the values at all.
+
+We only want to know:
+
+"Do these two trees have the same shape?"
+
+The recursive structure remains exactly the same:
+
+    left  <-> left
+    right <-> right
+
+The only difference is that the value comparison disappears.
+
+So:
+
+    Same Tree
+    = Same Structure + Same Values
+
+while:
+
+    Same Structure
+    = Same Tree Comparison - Value Constraint
+
+---
+
+# The Bigger Pattern
+
+This helped me recognize a more general pattern in tree recursion.
+
+When comparing two trees, first decide:
+
+"What exactly am I trying to compare?"
+
+### Same Tree
+
+    Structure + Values
+
+    left  <-> left
+    right <-> right
+
+### Same Structure
+
+    Structure only
+
+    left  <-> left
+    right <-> right
+
+### Symmetric Tree
+
+    Mirror Structure + Values
+
+    left  <-> right
+    right <-> left
+
+The recursive skeleton stays almost identical.
+
+What changes is the comparison rule.
+
+---
+
+## The Important Connection
+
+These are not really three completely different recursive ideas.
+
+They are variations of the same basic tree-comparison pattern.
+
+The difficult part is often not writing the recursion.
+
+The difficult part is identifying:
+
+    What should be compared?
+
+    Left with left?
+    Left with right?
+
+    Do values matter?
+
+Once those conditions are clear, the recursive solution follows naturally.
+
+---
+
+## Complexity
+
+For all three approaches:
+
+Time Complexity:
+
+    O(n)
+
+Every relevant node is visited once.
+
+Space Complexity:
+
+    O(h)
+
+where h is the height of the tree because of the recursion stack.
+
+For a balanced tree:
+
+    O(log n)
+
+For a completely skewed tree:
+
+    O(n)
+
+---
+
+## What I Learned
+
+The biggest takeaway from these problems is that a recursive problem often becomes simple once I identify exactly what smaller version of the same question I need to ask.
+
+For Symmetric Tree, the smaller question was not:
 
 "Is this subtree symmetric?"
 
@@ -162,4 +283,14 @@ It was:
 
 "Are these two subtrees mirrors of each other?"
 
-That small change in perspective turned what initially looked like a queue/traversal problem into a straightforward recursive comparison.
+For Same Tree, the question becomes:
+
+"Are these two corresponding subtrees the same?"
+
+And for Same Structure:
+
+"Do these two corresponding subtrees have the same shape?"
+
+So the recursion itself is almost the same.
+
+The real insight is deciding the comparison relationship before writing the recursion.
