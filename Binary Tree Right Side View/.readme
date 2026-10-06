@@ -1,0 +1,108 @@
+199. Binary Tree Right Side View
+
+LeetCode - Binary Tree Right Side View
+
+My Approach
+
+When I first looked at this problem, the obvious approach was level order traversal using a queue.
+
+Since the answer needs one node from every level, I could process the tree level by level and take the rightmost node.
+
+But while thinking about it, I realized that I could do the same thing using DFS.
+
+The important part was not just recursion — it was keeping track of:
+
+What level am I currently at?
+Have I already added a node for this level?
+
+I used a variable called visited to keep track of the levels that had already been added.
+
+if(visited < level){
+    ll.add(root.val);
+    visited++;
+}
+
+Initially:
+
+visited = -1
+level = 0
+
+So the root gets added.
+
+Then I deliberately traverse:
+
+view(root.right, level + 1);
+view(root.left, level + 1);
+
+Because the right subtree is always visited first, the first node I encounter at a new level is the node that would be visible from the right side.
+
+So I only add the first node encountered at each level.
+
+The Interesting Part
+
+The main realization for me was that this is basically doing what a level-order traversal does, but without explicitly maintaining a queue.
+
+I am dynamically keeping track of two things:
+
+level   → where I currently am
+visited → how many levels have already been answered
+
+So when:
+
+visited < level
+
+it means:
+
+"I have reached a level whose answer hasn't been recorded yet."
+
+Since I go right first, that first node becomes the answer for that level.
+
+Why Right First Matters
+
+Consider:
+
+        1
+       / \
+      2   3
+         / \
+        4   5
+
+The traversal order is roughly:
+
+1
+→ 3
+→ 5
+→ 4
+→ 2
+
+The first node encountered at each level is:
+
+Level 0 → 1
+Level 1 → 3
+Level 2 → 5
+
+Therefore:
+
+[1, 3, 5]
+
+is the right side view.
+
+Main Learning
+
+The biggest learning from this problem was not the recursion itself.
+
+It was realizing that traversal order can replace an explicit data structure.
+
+I initially thought:
+
+"This looks like a queue + level order problem."
+
+But then I realized:
+
+"If I visit the right side first and remember which levels I've already handled, I don't need the queue."
+
+That idea of combining traversal order + a small piece of state is what I found most interesting about this problem.
+
+Complexity
+Time: O(n) — every node is visited once.
+Space: O(h) — recursion stack, where h is the height of the tree.
