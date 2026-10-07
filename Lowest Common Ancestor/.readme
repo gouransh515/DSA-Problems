@@ -1,0 +1,134 @@
+Lowest Common Ancestor of a Binary Tree
+
+LeetCode - Lowest Common Ancestor of a Binary Tree
+
+My Understanding
+
+What makes this problem beautiful is that the solution becomes simple only after understanding what an ancestor and a lowest common ancestor actually mean.
+
+An ancestor is a node that exists above another node in the tree.
+
+A common ancestor of p and q is a node that is an ancestor of both.
+
+The lowest common ancestor is the common ancestor closest to p and q.
+
+The Realization
+
+I first reduced the problem to very simple tree shapes.
+
+If the tree is:
+
+      1
+     / \
+    2   3
+
+and p = 2, q = 3, then 1 is the LCA because one node is found on the left and the other on the right.
+
+Then I noticed that the same idea works for more complicated shapes.
+
+There are essentially three situations:
+
+1. One node is found on each side
+        1
+       / \
+      p   q
+
+Both subtrees contain one target.
+
+Therefore, the current node is the point where their paths meet.
+
+So the current node is the LCA.
+
+2. Both nodes are in the same subtree
+        1
+       /
+      2
+     / \
+    p   q
+
+The left subtree contains both nodes.
+
+So 1 cannot be the lowest common ancestor.
+
+We continue searching inside that subtree.
+
+3. One target is the current node
+        p
+         \
+          q
+
+If the current node itself is p or q, it can be the LCA.
+
+Where Recursion Makes It Beautiful
+
+The recursive function doesn't need to explicitly search for every possible tree shape.
+
+Instead, every node asks:
+
+"What did my left subtree find?"
+
+and
+
+"What did my right subtree find?"
+
+The answers then naturally create the three cases.
+
+              current
+              /     \
+         left answer  right answer
+
+If both sides return something, then one target was found on each side.
+
+Therefore:
+
+left != null && right != null
+        ↓
+   current is LCA
+
+If only one side returns something, that answer is passed upward.
+
+left != null && right == null
+        ↓
+        left
+
+or
+
+left == null && right != null
+        ↓
+        right
+
+If the current node is p or q, it returns itself.
+
+The Core Insight
+
+The recursion is not magically "finding the LCA."
+
+It is simply allowing every subtree to report information to its parent.
+
+Each subtree answers:
+
+"Did I find either of the two target nodes?"
+
+As these answers travel upward, eventually a node receives useful information from both sides.
+
+That node is exactly where the two paths meet.
+
+Therefore, it is the Lowest Common Ancestor.
+
+Why I Like This Problem
+
+The final implementation is surprisingly small compared to the level of understanding required to arrive at it.
+
+The challenge isn't really writing the recursion.
+
+The challenge is realizing that:
+
+If every node asks its left and right subtree for their answers, the three possible outcomes already contain the entire solution.
+
+That is what makes this problem so satisfying.
+
+A simple recursive pattern ends up solving what initially looks like a complicated tree problem.
+
+Complexity
+Time: O(n) — every node may be visited once.
+Space: O(h) — due to the recursion stack, where h is the height of the tree.
