@@ -1,0 +1,84 @@
+543. Diameter of Binary Tree
+
+LeetCode - Diameter of Binary Tree
+
+My Approach
+
+The first thing I needed to understand was height.
+
+For any node:
+
+height = max(left height, right height) + 1
+
+Then I thought about the diameter.
+
+For a particular node, the longest path passing through that node is:
+
+left height + right height + 2
+
+The +2 comes from the two edges connecting the current node to the deepest nodes of its left and right subtrees.
+
+The important realization was:
+
+To calculate the diameter at a node, I need the height of its left and right subtrees.
+But while calculating those heights, I can also calculate the best diameter already found inside those subtrees.
+
+So instead of returning only one value from recursion, I created a Diapair object containing:
+
+h → height of the subtree
+dia → maximum diameter found in that subtree
+How the Recursion Works
+
+For every node:
+
+Recursively get the Diapair from the left subtree.
+Recursively get the Diapair from the right subtree.
+Calculate the diameter passing through the current node:
+
+left height + right height + 2
+
+The best diameter for the current subtree is the maximum of:
+diameter through the current node
+left subtree's diameter
+right subtree's diameter
+Calculate the current subtree's height and return both values together.
+
+So the recursive call doesn't just say:
+
+"Here is my height."
+
+It says:
+
+"Here is my height, and here is the best diameter I found while calculating it."
+
+The Interesting Part
+
+The most interesting part for me was seeing how the Diapair object carries information back through the recursive calls.
+
+A subtree produces one object containing two different answers:
+
+        Diapair
+        /     \
+     height   diameter
+
+The parent then uses the child's height to calculate its own diameter, while also comparing the child's already-calculated diameter.
+
+So the same recursion is solving two related problems at once.
+
+Complexity
+
+Every node is visited exactly once.
+
+Time: O(n)
+
+Space: O(h) for the recursion stack, where h is the height of the tree.
+
+Takeaway
+
+The main lesson from this problem was:
+
+When a recursive problem needs multiple pieces of information from a subtree, return them together instead of calculating them separately.
+
+Here, height helps the parent calculate the diameter, while diameter preserves the best answer found inside the subtree.
+
+The final code is quite simple once that relationship between height and diameter becomes clear.
